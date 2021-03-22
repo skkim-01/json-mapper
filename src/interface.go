@@ -1,6 +1,7 @@
 package JsonMapper
 
 import (
+	"encoding/json"
 	"fmt"
 	"reflect"
 	"strings"
@@ -11,20 +12,20 @@ func NewBytes(b []byte) (*JsonMap, error) {
 	j := &JsonMap{
 		m: make(map[string]interface{}),
 	}
-	err := fromJson(b, &j.m)
+	err := FromJson(b, &j.m)
 	return j, err
 }
 
 // PPrint : pretty print
 func (j *JsonMap) PPrint() string {
-	b, _ := toJson(j.m)
+	b, _ := ToJson(j.m)
 	str, _ := prettyPrint(b)
 	return str
 }
 
 // Print : print
 func (j *JsonMap) Print() string {
-	b, _ := toJson(j.m)
+	b, _ := ToJson(j.m)
 	return string(b)
 }
 
@@ -77,4 +78,19 @@ func (j *JsonMap) Insert(base, k string, v interface{}) {
 	}
 
 	j.adder_search_root()
+}
+
+// toJson : object(struct) to json bytes
+func ToJson(_o interface{}) ([]byte, error) {
+	jsonBytes, err := json.Marshal(_o)
+	if err != nil {
+		return nil, err
+	}
+	return jsonBytes, nil
+}
+
+// fromJson : json bytes to object(struct)
+func FromJson(_byte []byte, _o interface{}) error {
+	err := json.Unmarshal(_byte, &_o)
+	return err
 }
