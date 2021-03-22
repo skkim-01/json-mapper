@@ -80,7 +80,7 @@ func (j *JsonMap) Insert(base, k string, v interface{}) {
 	j.adder_search_root()
 }
 
-// toJson : object(struct) to json bytes
+// ToJson : object(struct) to json bytes
 func ToJson(_o interface{}) ([]byte, error) {
 	jsonBytes, err := json.Marshal(_o)
 	if err != nil {
@@ -89,7 +89,7 @@ func ToJson(_o interface{}) ([]byte, error) {
 	return jsonBytes, nil
 }
 
-// fromJson : json bytes to object(struct)
+// FromJson : json bytes to object(struct)
 func FromJson(_byte []byte, _o interface{}) error {
 	err := json.Unmarshal(_byte, &_o)
 	return err
