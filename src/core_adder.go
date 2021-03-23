@@ -34,17 +34,6 @@ SWITCH_TYPE:
 		j.m[currentKey] = j.adder_search_slice_r(j.m[currentKey].([]interface{}))
 		return
 
-		// just for slice map
-	case SliceMapType:
-		j.cursor = j.cursor + 1
-		if j.cursor >= len(j.splitKey) {
-			j.m[j.insertKey] = j.insertValue
-			return
-		}
-		// slice must set return value
-		j.m[currentKey] = j.adder_search_slice_r(j.m[currentKey].([]interface{}))
-		return
-
 		// for update value
 	case Float64Type, StringType, BoolType, IntType:
 		j.m[j.insertKey] = j.insertValue
