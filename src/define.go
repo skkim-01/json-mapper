@@ -12,6 +12,11 @@ type JsonMap struct {
 	// for adder
 	insertKey   string
 	insertValue interface{}
+
+	// for searcher
+	searchOpt    map[string]interface{}
+	searchKey    string
+	searchResult []map[string]interface{}
 }
 
 /*** reflect type definition ***/

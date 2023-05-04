@@ -7,6 +7,9 @@ import (
 )
 
 func main() {
+	test_search()
+	return
+
 	fmt.Println("========= test case 1 ========")
 	test_json_v1()
 
@@ -36,9 +39,32 @@ var test_json_string string = `
 		[
 			{ "id": "5001", "type": "None" },
 			{ "id": "5002", "type": "Glazed" }			
-		]
+		],
+	"sub": {
+		"id": "1000",
+		"id2": "1111"
+	}
 }
 `
+
+func test_search() {
+	j, e := JsonMapper.NewBytes([]byte(test_json_string))
+	if nil != e {
+		fmt.Println(e)
+		return
+	}
+
+	// fmt.Println(j.PPrint())
+	searchResult := j.Search("id", `{
+		"gt" : "0000"
+	}`)
+	fmt.Println("### TEST SEARCH 1:", searchResult)
+
+	searchResult = j.Search("id", `{
+		"gt" : "2000"
+	}`)
+	fmt.Println("### TEST SEARCH 2:", searchResult)
+}
 
 // test_json_v1 : test with "test_json_string"
 func test_json_v1() {

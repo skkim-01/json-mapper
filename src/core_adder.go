@@ -52,7 +52,7 @@ SWITCH_TYPE:
 }
 
 // adder_search_slice_r : adder recursive function for slice
-// 		- slice must have slice return value for set new slice
+//   - slice must have slice return value for set new slice
 func (j *JsonMap) adder_search_slice_r(sub []interface{}) []interface{} {
 	// slice key is always integer
 	var currentKey int
