@@ -83,8 +83,6 @@ func (j *JsonMap) Insert(base, k string, v interface{}) {
 // Search : Retrieve all values ​​matching a condition
 //   - https://github.com/skkim-01/json-condition-parser/tree/main#type-definitions
 func (j *JsonMap) Search(keyIncluded string, searchOpt string) []map[string]interface{} {
-	j.splitKey = strings.Split("", SPLIT_TOKEN)
-	j.cursor = 0
 	j.searchKey = keyIncluded
 	json.Unmarshal([]byte(searchOpt), &j.searchOpt)
 

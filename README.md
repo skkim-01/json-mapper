@@ -15,6 +15,11 @@
     // for adder
     insertKey   string
     insertValue interface{}
+
+    // for searcher
+    searchOpt    map[string]interface{}
+    searchKey    string
+    searchResult []map[string]interface{}
   }
 ```
   
@@ -65,4 +70,10 @@
 ##### JsonMap.Insert() : insert/update value.
 ```go
   func (j *JsonMap) Insert(base, k string, v interface{})
+```
+
+##### JsonMap.Search() :  Retrieve all values ​​matching a condition.
+search options: https://github.com/skkim-01/json-condition-parser/tree/main#type-definitions
+```go
+  func (j *JsonMap) Search(keyIncluded string, searchOpt string) []map[string]interface{}
 ```
