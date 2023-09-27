@@ -1,3 +1,7 @@
 github.com/skkim-01/json-condition-parser v0.0.0-20210402012324-71c5e742e01b h1:+emVuoewcWfwccl3ozqF21oEBegcD8EKhyPSkLfT4fg=
 github.com/skkim-01/json-condition-parser v0.0.0-20210402012324-71c5e742e01b/go.mod h1:gNTE/wU5NL6eCGEC6eKPSK3nK2TABXOum1e01rxO3rQ=
 github.com/skkim-01/json-mapper v0.0.0-20210402000616-62a5e10e9d74/go.mod h1:s9yjthUdpzt6QCtGW/ey69KpdZQLF0/vbQeqms8agHI=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405 h1:yhCVgyC4o1eVCa2tZl7eS0r+SDo693bJlVdllGtEeKM=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.4.0 h1:D8xgwECY7CYvx+Y2n4sBz93Jn9JRvxdiyyo8CTfuKaY=
+gopkg.in/yaml.v2 v2.4.0/go.mod h1:RDklbk79AGWmwhnvt/jBztapEOGDOx6ZbXqjP6csGnQ=

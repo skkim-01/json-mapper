@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"os"
 	"reflect"
 	"strings"
 
@@ -21,6 +22,22 @@ func NewYamlMap(strYaml string) (*YamlMap, error) {
 	reader := strings.NewReader(strYaml)
 	res, err := _decode(reader)
 	fmt.Println("#DBG\t NewYamlMap.length:\t", len(res))
+	if err != nil {
+		return nil, err
+	}
+	y := &YamlMap{
+		m: res,
+	}
+	return y, nil
+}
+
+func NewYamlMapFile(yamlFile string) (*YamlMap, error) {
+	pFile, err := os.Open(yamlFile)
+	if err != nil {
+		return nil, err
+	}
+	res, err := _decode(pFile)
+	fmt.Println("#DBG\t NewYamlMapFile.length:\t", len(res))
 	if err != nil {
 		return nil, err
 	}
