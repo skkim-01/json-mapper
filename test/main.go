@@ -7,8 +7,27 @@ import (
 )
 
 func main() {
-	test_search()
+	yamlMap, err := JsonMapper.NewYamlMap(test_yaml)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	//fmt.Println(yamlMap.Print())
+
+	// success
+	// fmt.Println("========= find: idx 3 / spec.accessModes")
+	// yamlMap.Find(3, "spec.accessModes")
+
+	fmt.Println("========= find: idx 2 / spec.mountOptions")
+	yamlMap.Find(2, "spec.mountOptions")
+
+	fmt.Println("========= find: idx 2 / spec.mountOptions.0")
+	yamlMap.Find(2, "spec.mountOptions.0")
+
+	fmt.Println("")
 	return
+	test_search()
 
 	fmt.Println("========= test case 1 ========")
 	test_json_v1()
@@ -17,6 +36,95 @@ func main() {
 	fmt.Println("========= test case 2 ========")
 	test_json_v2()
 }
+
+var test_yaml string = `
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-airflow-dags
+spec:
+  env:
+  - name: EXTEND_VALUE
+    value: true
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: sc-smb-airflow
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=50000
+    - gid=0
+    - noserverino  # required to prevent data corruption
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: 10.175.41.91/airflow/dags##
+    volumeAttributes:
+      source: "//10.175.41.91/airflow/dags"
+    nodeStageSecretRef:
+      name: smbcreds
+      namespace: default
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-airflow-dags
+  namespace: airflow
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+  volumeName: pv-airflow-dags
+  storageClassName: sc-smb-airflow
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-airflow-logs
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: sc-smb-airflow
+  mountOptions:
+    - dir_mode=0777
+    - file_mode=0777
+    - uid=50000
+    - gid=0
+    - noserverino  # required to prevent data corruption
+  csi:
+    driver: smb.csi.k8s.io
+    readOnly: false
+    volumeHandle: 10.175.41.91/airflow/logs##
+    volumeAttributes:
+      source: "//10.175.41.91/airflow/logs"
+    nodeStageSecretRef:
+      name: smbcreds
+      namespace: default
+---
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: pvc-airflow-logs
+  namespace: airflow
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 20Gi
+  volumeName: pv-airflow-logs
+  storageClassName: sc-smb-airflow
+
+`
 
 /*** test case 1 ***/
 var test_json_string string = `
