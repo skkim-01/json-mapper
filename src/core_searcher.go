@@ -96,6 +96,8 @@ func (j *JsonMap) hit(parentKey, currentKey string, currentValue interface{}) {
 			} else {
 				tmp[fmt.Sprintf("%v.%v", parentKey, currentKey)] = currentValue
 			}
+			// add parentkey
+			tmp["parentKey"] = parentKey
 			j.searchResult = append(j.searchResult, tmp)
 		}
 	}
