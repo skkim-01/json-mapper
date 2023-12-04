@@ -70,7 +70,6 @@ func (o *YamlMap) Prints() string {
 	for _, v := range o.m {
 		retv += "---\n"
 		output, err := v.Print()
-		fmt.Println(output)
 		if err != nil {
 			fmt.Println("#ERROR\t YamlMap.Print:\t", err)
 			break
@@ -101,6 +100,34 @@ func (o *YamlMap) Find(idx int, k string) interface{} {
 	o.m[idx].cursor = 0
 
 	v := o.m[idx].finder_search_root()
-	fmt.Println(v)
 	return v
+}
+
+// Insert : insert/update, when insert root, set [base == ""]
+func (o *YamlMap) Insert(idx int, base, k string, v interface{}) {
+	if idx < 0 {
+		return
+	} else if idx >= len(o.m) {
+		return
+	}
+
+	o.m[idx].splitKey = strings.Split(base, SPLIT_TOKEN)
+	o.m[idx].splitKey = append(o.m[idx].splitKey, k)
+	o.m[idx].cursor = 0
+
+	o.m[idx].insertKey = k
+	// type cast : []map[string]interface{} -> []interface{}
+	vTmp := make([]interface{}, 0)
+	switch reflect.TypeOf(v) {
+	case SliceMapType:
+		for i := range v.([]map[interface{}]interface{}) {
+			vTmp = append(vTmp, v.([]map[interface{}]interface{})[i])
+		}
+		o.m[idx].insertValue = vTmp
+
+	default:
+		o.m[idx].insertValue = v
+	}
+
+	o.m[idx].adder_search_root()
 }

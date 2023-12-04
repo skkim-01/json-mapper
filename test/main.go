@@ -7,27 +7,10 @@ import (
 )
 
 func main() {
-	yamlMap, err := JsonMapper.NewYamlMap(test_yaml)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
 
-	//fmt.Println(yamlMap.Print())
-
-	// success
-	// fmt.Println("========= find: idx 3 / spec.accessModes")
-	// yamlMap.Find(3, "spec.accessModes")
-
-	fmt.Println("========= find: idx 2 / spec.mountOptions")
-	yamlMap.Find(2, "spec.mountOptions")
-
-	fmt.Println("========= find: idx 2 / spec.mountOptions.0")
-	yamlMap.Find(2, "spec.mountOptions.0")
-
-	fmt.Println("")
-	return
 	test_search()
+
+	return
 
 	fmt.Println("========= test case 1 ========")
 	test_json_v1()
@@ -35,7 +18,64 @@ func main() {
 	fmt.Println()
 	fmt.Println("========= test case 2 ========")
 	test_json_v2()
+
+	fmt.Println("========= yaml find ========")
+	test_yaml_find()
+	fmt.Println("")
+
+	fmt.Println("========= yaml insert ========")
+	test_yaml_insert()
+	fmt.Println("")
+
 }
+
+func test_yaml_insert() {
+	yamlMap, err := JsonMapper.NewYamlMap(yaml_adder_test)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	// fmt.Println("========= find: idx 2 / spec.mountOptions")
+	// yamlMap.Find(2, "spec.mountOptions")
+
+	// fmt.Println("========= find: idx 2 / spec.mountOptions.0")
+	// yamlMap.Find(2, "spec.mountOptions.0")
+
+	fmt.Println("========== yaml adder test")
+	// fmt.Println(yamlMap.Find(0, "metadata.name"))
+	// fmt.Println(yamlMap.Find(0, "data.config.yaml"))
+	//fmt.Println(yamlMap.Find(0, "data.config.yaml.staticPasswords"))
+	yamlMap.Insert(0, "data", "stirngs", tmp)
+	fmt.Println(yamlMap.Prints())
+}
+
+var tmp string = `123qwe
+asdqwe
+zxcqwe
+asdqwe
+ccc
+`
+
+var yaml_adder_test string = `
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dex
+  namespace: auth
+data:
+  config.yaml: |
+    logger:
+      level: "debug"
+      format: text
+    oauth2:
+      skipApprovalScreen: true
+    enablePasswordDB: true
+    staticPasswords:
+    - email: user@example.com
+      hash: $2y$12$4K/VkmDd1q1Orb3xAt82zu8gk7Ad6ReFR4LCP9UeYE90NLiN9Df72
+      username: user
+`
 
 var test_yaml string = `
 ---
@@ -154,6 +194,26 @@ var test_json_string string = `
 	}
 }
 `
+
+func test_yaml_find() {
+	yamlMap, err := JsonMapper.NewYamlMap(test_yaml)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	//fmt.Println(yamlMap.Print())
+
+	// success
+	// fmt.Println("========= find: idx 3 / spec.accessModes")
+	// yamlMap.Find(3, "spec.accessModes")
+
+	fmt.Println("========= find: idx 2 / spec.mountOptions")
+	fmt.Println(yamlMap.Find(2, "spec.mountOptions").([]interface{}))
+
+	fmt.Println("========= find: idx 2 / spec.mountOptions.0")
+	fmt.Println(yamlMap.Find(2, "spec.mountOptions.0").(string))
+}
 
 func test_search() {
 	j, e := JsonMapper.NewBytes([]byte(test_json_string))

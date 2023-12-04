@@ -31,7 +31,6 @@ func newYamlObject(data map[interface{}]interface{}) *YamlObject {
 
 func (o *YamlObject) Print() (string, error) {
 	bytesOutput, err := yaml.Marshal(o.m)
-	fmt.Println(len(bytesOutput))
 	if err != nil {
 		fmt.Println("#ERROR\t yamlObject.print:\t", err)
 		return "", err

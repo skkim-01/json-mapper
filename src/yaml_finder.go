@@ -11,7 +11,6 @@ func (j *YamlObject) finder_search_root() interface{} {
 	var currentKey string
 	currentKey = j.splitKey[j.cursor]
 
-	fmt.Println("---debug:", currentKey, reflect.TypeOf(j.m[currentKey]))
 	// goto: switch type for next key
 SWITCH_TYPE:
 	switch reflect.TypeOf(j.m[currentKey]) {
@@ -91,8 +90,6 @@ func (j *YamlObject) finder_search_slice_r(sub []interface{}) interface{} {
 func (j *YamlObject) finder_search_map_r(sub map[interface{}]interface{}) interface{} {
 	var currentKey string
 	currentKey = j.splitKey[j.cursor]
-
-	fmt.Println("---debug:", currentKey, reflect.TypeOf(sub[currentKey]))
 
 	// goto: switch type for next key
 SWITCH_TYPE:
