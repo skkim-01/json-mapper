@@ -21,7 +21,6 @@ var YamlMapType = reflect.TypeOf((map[interface{}]interface{})(nil))
 func NewYamlMap(strYaml string) (*YamlMap, error) {
 	reader := strings.NewReader(strYaml)
 	res, err := _decode(reader)
-	fmt.Println("#DBG\t NewYamlMap.length:\t", len(res))
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +36,6 @@ func NewYamlMapFile(yamlFile string) (*YamlMap, error) {
 		return nil, err
 	}
 	res, err := _decode(pFile)
-	fmt.Println("#DBG\t NewYamlMapFile.length:\t", len(res))
 	if err != nil {
 		return nil, err
 	}
