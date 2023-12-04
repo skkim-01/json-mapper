@@ -131,3 +131,23 @@ func (o *YamlMap) Insert(idx int, base, k string, v interface{}) {
 
 	o.m[idx].adder_search_root()
 }
+
+// Remove
+func (o *YamlMap) Remove(idx int, k string) {
+	if idx < 0 {
+		return
+	} else if idx >= len(o.m) {
+		return
+	}
+
+	// prevent remove root
+	if k == "" {
+		return
+	}
+
+	o.m[idx].splitKey = strings.Split(k, SPLIT_TOKEN)
+	o.m[idx].cursor = 0
+	o.m[idx].insertKey = k
+
+	o.m[idx].remover_search_root()
+}

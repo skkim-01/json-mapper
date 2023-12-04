@@ -7,7 +7,7 @@ import (
 )
 
 // finder_search_root : finder recursive function start point
-func (j *YamlObject) finder_search_root() interface{} {
+func (j *YamlObject) remover_search_root() {
 	var currentKey string
 	currentKey = j.splitKey[j.cursor]
 
@@ -17,19 +17,24 @@ SWITCH_TYPE:
 	case YamlMapType:
 		j.cursor = j.cursor + 1
 		if j.cursor >= len(j.splitKey) {
-			return j.m[currentKey]
+			delete(j.m, currentKey)
+			return
 		}
-		return j.finder_search_map_r(j.m[currentKey].(map[interface{}]interface{}))
+		j.remover_search_map_r(j.m[currentKey].(map[interface{}]interface{}))
+		return
 
 	case SliceType:
 		j.cursor = j.cursor + 1
 		if j.cursor >= len(j.splitKey) {
-			return j.m[currentKey]
+			delete(j.m, currentKey)
+			return
 		}
-		return j.finder_search_slice_r(j.m[currentKey].([]interface{}))
+		j.m[currentKey] = j.remover_search_slice_r(j.m[currentKey].([]interface{}))
+		return
 
 	case Float64Type, StringType, BoolType, IntType:
-		return j.m[currentKey]
+		delete(j.m, currentKey)
+		return
 
 	default:
 		// set next key
@@ -39,11 +44,10 @@ SWITCH_TYPE:
 			goto SWITCH_TYPE
 		}
 	}
-	return nil
 }
 
 // finder_search_slice_r : finder recursive function for slice
-func (j *YamlObject) finder_search_slice_r(sub []interface{}) interface{} {
+func (j *YamlObject) remover_search_slice_r(sub []interface{}) []interface{} {
 	// slice key is always integer
 	var currentKey int
 	var err error
@@ -51,32 +55,37 @@ func (j *YamlObject) finder_search_slice_r(sub []interface{}) interface{} {
 	currentKey, err = strconv.Atoi(j.splitKey[j.cursor])
 	if nil != err {
 		fmt.Println("### ERROR ### :", err)
-		return nil
+		return sub
 	}
 
 	if currentKey >= len(sub) || currentKey < 0 {
 		fmt.Println("### ERROR ### : index is out of range")
-		return nil
+		return sub
 	}
 
 	switch reflect.TypeOf(sub[currentKey]) {
 	case YamlMapType:
 		j.cursor = j.cursor + 1
 		if j.cursor >= len(j.splitKey) {
-			return sub[currentKey]
+			sub = j.removeSliceElement(sub, currentKey)
+			return sub
 		}
-		return j.finder_search_map_r(sub[currentKey].(map[interface{}]interface{}))
+		j.remover_search_map_r(sub[currentKey].(map[interface{}]interface{}))
+		return sub
 
 		// --- must not hit this section. json doesn't allow netsted array.
 	case SliceType:
 		j.cursor = j.cursor + 1
 		if j.cursor >= len(j.splitKey) {
-			return sub[currentKey]
+			sub = j.removeSliceElement(sub, currentKey)
+			return sub
 		}
-		return j.finder_search_slice_r(sub[currentKey].([]interface{}))
+		sub[currentKey] = j.remover_search_slice_r(sub[currentKey].([]interface{}))
+		return sub
 
 	case Float64Type, StringType, BoolType, IntType:
-		return sub[currentKey]
+		sub = j.removeSliceElement(sub, currentKey)
+		return sub
 		// --- end of section
 
 	default:
@@ -87,7 +96,7 @@ func (j *YamlObject) finder_search_slice_r(sub []interface{}) interface{} {
 }
 
 // finder_search_map_r : finder recursive function for map
-func (j *YamlObject) finder_search_map_r(sub map[interface{}]interface{}) interface{} {
+func (j *YamlObject) remover_search_map_r(sub map[interface{}]interface{}) {
 	var currentKey string
 	currentKey = j.splitKey[j.cursor]
 
@@ -97,19 +106,24 @@ SWITCH_TYPE:
 	case YamlMapType:
 		j.cursor = j.cursor + 1
 		if j.cursor >= len(j.splitKey) {
-			return sub[currentKey]
+			delete(sub, currentKey)
+			return
 		}
-		return j.finder_search_map_r(sub[currentKey].(map[interface{}]interface{}))
+		j.remover_search_map_r(sub[currentKey].(map[interface{}]interface{}))
+		return
 
 	case SliceType:
 		j.cursor = j.cursor + 1
 		if j.cursor >= len(j.splitKey) {
-			return sub[currentKey]
+			delete(sub, currentKey)
+			return
 		}
-		return j.finder_search_slice_r(sub[currentKey].([]interface{}))
+		sub[currentKey] = j.remover_search_slice_r(sub[currentKey].([]interface{}))
+		return
 
 	case Float64Type, StringType, BoolType, IntType:
-		return sub[currentKey]
+		delete(sub, currentKey)
+		return
 
 	default:
 		// set next key
@@ -119,5 +133,12 @@ SWITCH_TYPE:
 			goto SWITCH_TYPE
 		}
 	}
-	return nil
+}
+
+// delete slice element
+func (j *YamlObject) removeSliceElement(s []interface{}, index int) []interface{} {
+	copy(s[index:], s[index+1:])
+	s[len(s)-1] = nil
+	s = s[:len(s)-1]
+	return s
 }

@@ -71,7 +71,7 @@ func (j *YamlObject) adder_search_slice_r(sub []interface{}) []interface{} {
 	}
 
 	switch reflect.TypeOf(sub[currentKey]) {
-	case JsonMapType:
+	case YamlMapType:
 		j.cursor = j.cursor + 1
 		if j.cursor >= len(j.splitKey) {
 			sub[currentKey] = j.insertValue
