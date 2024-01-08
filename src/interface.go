@@ -128,3 +128,10 @@ func FromJson(_byte []byte, _o interface{}) error {
 	err := json.Unmarshal(_byte, &_o)
 	return err
 }
+
+// Convert: obejct to json string
+func Convert(o interface{}) string {
+	b, _ := ToJson(o)
+	str, _ := prettyPrint(b)
+	return str
+}
