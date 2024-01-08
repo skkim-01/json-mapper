@@ -1,6 +1,7 @@
 package JsonMapper
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"io"
@@ -36,6 +37,22 @@ func NewYamlMapFile(yamlFile string) (*YamlMap, error) {
 		return nil, err
 	}
 	res, err := _decode(pFile)
+	if err != nil {
+		return nil, err
+	}
+	y := &YamlMap{
+		m: res,
+	}
+	return y, nil
+}
+
+func NewYamlObject(o interface{}) (*YamlMap, error) {
+	yamlBytes, err := yaml.Marshal(o)
+	if err != nil {
+		return nil, err
+	}
+	reader := bytes.NewReader(yamlBytes)
+	res, err := _decode(reader)
 	if err != nil {
 		return nil, err
 	}
