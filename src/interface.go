@@ -3,6 +3,7 @@ package JsonMapper
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 	"reflect"
 	"strings"
 )
@@ -14,6 +15,29 @@ func NewBytes(b []byte) (*JsonMap, error) {
 	}
 	err := FromJson(b, &j.m)
 	return j, err
+}
+
+// NewString: new jmap from string
+func NewString(s string) (*JsonMap, error) {
+	return NewBytes([]byte(s))
+}
+
+// NewObject: new jmap from map[string]interface{}
+func NewObject(o interface{}) (*JsonMap, error) {
+	jsonBytes, err := json.Marshal(o)
+	if err != nil {
+		return nil, err
+	}
+	return NewBytes(jsonBytes)
+}
+
+// NewFile: new jamp from file
+func NewFile(path string) (*JsonMap, error) {
+	readBytes, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+	return NewBytes(readBytes)
 }
 
 // PPrint : pretty print
