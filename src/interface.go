@@ -104,6 +104,7 @@ func (j *JsonMap) Insert(base, k string, v interface{}) {
 	j.adder_search_root()
 }
 
+// TODO: ....
 // Search : Retrieve all values ​​matching a condition
 //   - https://github.com/skkim-01/json-condition-parser/tree/main#type-definitions
 func (j *JsonMap) Search(keyIncluded string, searchOpt string) []map[string]interface{} {
@@ -112,6 +113,19 @@ func (j *JsonMap) Search(keyIncluded string, searchOpt string) []map[string]inte
 
 	j.searcher_search_root()
 	return j.searchResult
+}
+
+func (j *JsonMap) GetObject() map[string]interface{} {
+	return j.m
+}
+
+func (j *JsonMap) CopyObject() map[string]interface{} {
+	copyObject := make(map[string]interface{})
+
+	for k, v := range j.m {
+		copyObject[k] = v
+	}
+	return copyObject
 }
 
 // ToJson : object(struct) to json bytes
